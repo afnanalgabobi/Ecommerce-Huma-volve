@@ -172,4 +172,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
   }
+
+
 }
