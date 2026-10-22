@@ -34,6 +34,4 @@ class ProductModel {
     creationAt = json['creationAt'];
     updatedAt = json['updatedAt'];
   }
-  static String _cleanImageUrl(String url) =>
-      url.replaceAll(RegExp(r'[\[\]"]'), '').trim();
 }
