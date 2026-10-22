@@ -5,8 +5,7 @@ class SignupResModel {
   String? name;
   String? role;
   String? avatar;
-  String? creationAt;
-  String? updatedAt;
+
 
   SignupResModel(
       {this.id,
@@ -15,8 +14,7 @@ class SignupResModel {
         this.name,
         this.role,
         this.avatar,
-        this.creationAt,
-        this.updatedAt});
+});
 
   SignupResModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -25,8 +23,7 @@ class SignupResModel {
     name = json['name'];
     role = json['role'];
     avatar = json['avatar'];
-    creationAt = json['creationAt'];
-    updatedAt = json['updatedAt'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -37,8 +34,7 @@ class SignupResModel {
     data['name'] = this.name;
     data['role'] = this.role;
     data['avatar'] = this.avatar;
-    data['creationAt'] = this.creationAt;
-    data['updatedAt'] = this.updatedAt;
+
     return data;
   }
 }

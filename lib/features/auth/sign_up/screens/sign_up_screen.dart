@@ -52,6 +52,7 @@ Future<void> _onSignup()async{
     nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
     apiManager =  ApiManager();
     sigUpService = SignupService(apiManager);
     super.initState();
