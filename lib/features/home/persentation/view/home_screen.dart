@@ -1,11 +1,11 @@
-import 'package:ecommerce_app_huma_volve/features/home/cubit/home_stats.dart';
+import 'package:ecommerce_app_huma_volve/features/home/persentation/view/widgets/category_chip.dart';
+import 'package:ecommerce_app_huma_volve/features/home/persentation/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-import '../../../core/theme.dart';
-import '../cubit/home_cubit.dart';
-import '../../../core/dummy_data.dart';
-import 'widgets/product_card.dart';
-import 'widgets/category_chip.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';import '../../../../core/dummy_data.dart';
 
+import '../../../../core/theme.dart';
+import '../view_model/home_cubit.dart';
+import '../view_model/home_stats.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _selectCategory(int index, int categoryId) {
     if (index == _selectedCategoryIndex) return;
     setState(() => _selectedCategoryIndex = index);
-    context.read<HomeCubit>().getProducts(categoryId: categoryId);
+    context.read<HomeCubit>().changeSelectedCategory(categoryId: categoryId);
   }
 
   @override
