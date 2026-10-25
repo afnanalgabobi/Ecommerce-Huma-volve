@@ -19,12 +19,21 @@ class CategoriesError extends HomeStats {
 
 class ProductsLoading extends HomeStats {}
 
-class ProductsSuccess extends HomeStats {
-  final List<HomeProductEntity> products;
-  ProductsSuccess(this.products);
+class ProductsLoadingMore extends HomeStats {}
+
+class ProductsLoadingError extends HomeStats {
+  final String errorMessage;
+  ProductsLoadingError(this.errorMessage);
 }
 
 class ProductsError extends HomeStats {
-  final String errorMessage;
   ProductsError(this.errorMessage);
+
+  final String errorMessage;
+}
+
+class ProductsSuccess extends HomeStats {
+  ProductsSuccess(this.products);
+
+  final List<HomeProductEntity> products;
 }

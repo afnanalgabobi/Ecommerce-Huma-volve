@@ -3,5 +3,5 @@ import '../models/product_model.dart';
 
 abstract class HomeRemoteDataSource {
 Future<List<CategoryModel>> getCategories();
-Future<List<ProductModel>> getProducts(int? categoryId);
+Future<List<ProductModel>> getProducts(int? categoryId,{required int offset , required int limit});
 }

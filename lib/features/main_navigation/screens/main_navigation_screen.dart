@@ -6,6 +6,7 @@ import 'package:ecommerce_app_huma_volve/features/home/domain/use_cases/get_cate
 import 'package:ecommerce_app_huma_volve/features/home/domain/use_cases/get_products_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/network/api_manager.dart';
 import '../../../core/theme.dart';
 import '../../home/persentation/view_model/home_cubit.dart';
@@ -36,7 +37,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     _homeRepository = HomeRepositoryImp(_homeRemoteDataSource);
     _getProductsUseCase = GetProductsUseCase(_homeRepository);
     _getCategoriesUseCase = GetCategoriesUseCase(_homeRepository);
-    _homeCubit = HomeCubit(getProductsUseCase: _getProductsUseCase, getCategoriesUseCase: _getCategoriesUseCase);
+    _homeCubit = HomeCubit(
+      getProductsUseCase: _getProductsUseCase,
+      getCategoriesUseCase: _getCategoriesUseCase,
+    );
 
     super.initState();
   }
@@ -44,10 +48,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = <Widget>[
-      BlocProvider(
-        create: (context) => _homeCubit,
-        child: const HomeScreen(),
-      ),
+      BlocProvider(create: (context) => _homeCubit, child: const HomeScreen()),
       const CartScreen(),
       const ProfileScreen(),
     ];

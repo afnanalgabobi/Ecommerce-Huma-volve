@@ -1,7 +1,9 @@
 import 'package:ecommerce_app_huma_volve/features/home/persentation/view/widgets/category_chip.dart';
 import 'package:ecommerce_app_huma_volve/features/home/persentation/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';import '../../../../core/dummy_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/dummy_data.dart';
 
 import '../../../../core/theme.dart';
 import '../view_model/home_cubit.dart';
@@ -16,11 +18,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedCategoryIndex = 0;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     context.read<HomeCubit>().loadingData();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onListen);
+  }
+
+  void _onListen() {
+    final pixels = _scrollController.position.pixels;
+    final max = _scrollController.position.maxScrollExtent;
+    final int triggerDistance = 200;
+    if (pixels >= max - triggerDistance) {
+      context.read<HomeCubit>().loadMoreProducts();
+    }
   }
 
   void _selectCategory(int index, int categoryId) {
@@ -38,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           color: AppTheme.primary,
           onRefresh: () async => null,
           child: CustomScrollView(
+            controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
@@ -126,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      // Categories: rebuilds only on the categories states.
                       BlocBuilder<HomeCubit, HomeStats>(
                         buildWhen: (previous, current) =>
                             current is CategoriesLoading ||
@@ -150,11 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
                                   return CategoryChip(
-                                    label: categories[index].name ?? 'All',
+                                    label: categories[index].name,
                                     isSelected: _selectedCategoryIndex == index,
                                     onTap: () => _selectCategory(
                                       index,
-                                      categories[index].id ?? 0,
+                                      categories[index].id,
                                     ),
                                   );
                                 },
@@ -177,10 +191,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // Products: rebuilds only on the products states.
               BlocBuilder<HomeCubit, HomeStats>(
-                buildWhen: (previous, current) =>
-                    current is ProductsLoading ||
-                    current is ProductsSuccess ||
-                    current is ProductsError,
+                buildWhen: (previous, current) {
+                  if (current is ProductsLoading ||
+                      current is ProductsLoadingError ||
+                      current is ProductsLoadingMore ||
+                      current is ProductsError) {
+                    return false;
+                  }
+                  return true;
+                },
                 builder: (context, state) {
                   if (state is ProductsLoading) {
                     return const SliverToBoxAdapter(
@@ -230,6 +249,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const SliverToBoxAdapter(child: SizedBox.shrink());
                 },
               ),
+              BlocBuilder<HomeCubit, HomeStats>(
+                builder: (context, state) {
+                  if (state is ProductsLoadingMore) {
+                    return const SliverToBoxAdapter(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else
+                    return const SliverToBoxAdapter(
+                      child: SizedBox(height: 24),
+                    );
+                },
+              ),
+
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
             ],
           ),
