@@ -36,5 +36,4 @@ class HomeRemoteDataSourceImp implements HomeRemoteDataSource{
         .toList();
     return dartData;
   }
-
 }

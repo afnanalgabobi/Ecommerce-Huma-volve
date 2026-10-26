@@ -33,4 +33,5 @@ class HomeRepositoryImp implements HomeRepository {
       return Left(Failure(failureMessage: e.toString()));
     }
   }
+
 }

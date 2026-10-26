@@ -97,4 +97,5 @@ class HomeCubit extends Cubit<HomeStats> {
       },
     );
   }
+
 }

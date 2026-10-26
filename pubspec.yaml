@@ -39,6 +39,8 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   flutter_bloc:
   dartz:
+  share_plus:
+  go_router:
 
 dev_dependencies:
   flutter_test:

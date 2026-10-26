@@ -37,3 +37,12 @@ class ProductsSuccess extends HomeStats {
 
   final List<HomeProductEntity> products;
 }
+class ProductSuccess extends HomeStats {
+final HomeProductEntity product;
+ProductSuccess(this.product);
+}
+class ProductError extends HomeStats {
+  final String errorMessage;
+  ProductError(this.errorMessage);
+}
+class ProductLoading extends HomeStats {}
