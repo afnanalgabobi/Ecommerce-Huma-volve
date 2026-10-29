@@ -1,14 +1,20 @@
 import 'package:ecommerce_app_huma_volve/features/home/domain/entities/home_product_entity.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../../core/theme.dart';
 import '../../../../details/persentation/view/product_details_screen.dart';
+import '../../../../details/persentation/view/widgets/share_product_button.dart';
 
-
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final HomeProductEntity product;
 
   const ProductCard({super.key, required this.product});
 
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -18,7 +24,8 @@ class ProductCard extends StatelessWidget {
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 500),
             pageBuilder: (context, animation, secondaryAnimation) =>
-                ProductDetailsScreen(productId: product.id),
+                ProductDetailsScreen(productId: widget.product.id),
+
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   return FadeTransition(opacity: animation, child: child);
@@ -47,13 +54,13 @@ class ProductCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Hero(
-                    tag: 'product-${product.id}',
+                    tag: 'product-${widget.product.id}',
                     child: ClipRRect(
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
                       child: Image.network(
-                        product.images![0],
+                        widget.product.images![0],
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
@@ -76,6 +83,7 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  ShareProductButton(productId: widget.product.id),
                 ],
               ),
             ),
@@ -88,7 +96,7 @@ class ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      product.title ?? '',
+                      widget.product.title ?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -102,7 +110,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${product.price!.toStringAsFixed(2)}',
+                          '\$${widget.product.price!.toStringAsFixed(2)}',
                           style: const TextStyle(
                             color: AppTheme.primary,
                             fontWeight: FontWeight.bold,

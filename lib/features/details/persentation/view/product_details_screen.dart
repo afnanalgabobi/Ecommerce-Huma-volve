@@ -1,62 +1,74 @@
 import 'package:ecommerce_app_huma_volve/features/details/data/data_source/product_details_remote_data_source_imp.dart';
 import 'package:ecommerce_app_huma_volve/features/details/data/repository/product_details_repository_imp.dart';
+import 'package:ecommerce_app_huma_volve/features/details/persentation/view/widgets/share_product_button.dart';
+import 'package:ecommerce_app_huma_volve/features/details/persentation/view_model/product_details_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/network/api_manager.dart';
 import '../../../../core/theme.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../home/persentation/view_model/home_cubit.dart';
 import '../../../home/persentation/view_model/home_stats.dart';
-import '../../data/data_source/product_details_remote_data_source.dart';
-import '../../domain/repository/product_details_repository.dart';
+
 import '../../domain/use_cases/get_product_details_useCase.dart';
 import '../view_model/product_details_cubit.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
+class ProductDetailsScreen extends StatelessWidget {
   final int? productId;
 
-  ProductDetailsScreen({super.key, required this.productId});
-
-  @override
-  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
-}
-
-class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  late final ApiManager _apiManager;
-  late final ProductDetailsRemoteDataSource _productDetailsRemoteDataSource;
-  late final ProductDetailsRepository _productDetailsRepository;
-  late final GetProductDetailsUseCase _getProductDetailsUseCase;
-
-  @override
-  void initState() {
-
-    super.initState();
-  }
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProductDetailsCubit>().getProductById(productId: widget.productId);
-    _apiManager = ApiManager();
-    _productDetailsRemoteDataSource = ProductDetailsRemoteDataSourceImp(_apiManager);
-    _productDetailsRepository = ProductDetailsRepositoryImp(_productDetailsRemoteDataSource);
-    _getProductDetailsUseCase = GetProductDetailsUseCase(_productDetailsRepository);
+    final _apiManager = ApiManager();
+    final _productDetailsRemoteDataSource = ProductDetailsRemoteDataSourceImp(
+      _apiManager,
+    );
+    final _productDetailsRepository = ProductDetailsRepositoryImp(
+      _productDetailsRemoteDataSource,
+    );
+    final _getProductDetailsUseCase = GetProductDetailsUseCase(
+      _productDetailsRepository,
+    );
+    final _productDetailsCubit = ProductDetailsCubit(
+      getProductDetailsUseCase: _getProductDetailsUseCase,
+    );
+    return BlocProvider(
+      create: (context) =>
+          _productDetailsCubit..getProductById(productId: productId),
+      child: ProductDetailsView(productId: productId),
+    );
+  }
+}
 
+class ProductDetailsView extends StatefulWidget {
+  final int? productId;
+  const ProductDetailsView({super.key, required this.productId});
+
+  @override
+  State<StatefulWidget> createState() => _ProductDetailsViewState();
+}
+
+class _ProductDetailsViewState extends State<ProductDetailsView> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
-      body: BlocBuilder<HomeCubit, HomeStats>(
+      body: BlocBuilder<ProductDetailsCubit, ProductDetailsStats>(
         builder: (context, state) {
           if (state is ProductLoading) {
-            return const SliverToBoxAdapter(
-              child: Padding(
+            return const
+               Padding(
                 padding: EdgeInsets.only(top: 48),
                 child: Center(
                   child: CircularProgressIndicator(color: AppTheme.primary),
                 ),
-              ),
+
             );
           }
           if (state is ProductError) {
-            return SliverToBoxAdapter(child: Text(state.errorMessage));
+            return  Center(child: Text(state.errorMessage));
           }
           if (state is ProductSuccess) {
             return CustomScrollView(
@@ -77,6 +89,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     onPressed: () => Navigator.pop(context),
                   ),
                   actions: [
+                    ShareProductButton(productId: state.product.id),
                     IconButton(
                       icon: Container(
                         padding: const EdgeInsets.all(8),
@@ -212,8 +225,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ],
             );
           }
-          return const SliverToBoxAdapter(child: SizedBox.shrink());
-          },
+          return  SizedBox.shrink();
+        },
       ),
     );
   }

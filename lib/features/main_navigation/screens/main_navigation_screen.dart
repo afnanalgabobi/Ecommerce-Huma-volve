@@ -26,9 +26,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   late final ApiManager _apiManager;
   late final HomeRemoteDataSource _homeRemoteDataSource;
   late final HomeRepository _homeRepository;
+  late final HomeCubit _homeCubit;
   late final GetProductsUseCase _getProductsUseCase;
   late final GetCategoriesUseCase _getCategoriesUseCase;
-  late final HomeCubit _homeCubit;
 
   @override
   void initState() {

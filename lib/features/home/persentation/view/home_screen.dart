@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/dummy_data.dart';
-
 import '../../../../core/theme.dart';
 import '../view_model/home_cubit.dart';
 import '../view_model/home_stats.dart';
@@ -19,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedCategoryIndex = 0;
   late final ScrollController _scrollController;
-
   @override
   void initState() {
     super.initState();
